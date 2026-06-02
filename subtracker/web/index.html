@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SubTracker — your subscriptions, your machine</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <header class="masthead">
+    <div class="brand">
+      <span class="mark">$</span>
+      <div>
+        <h1>SubTracker</h1>
+        <p class="tagline">Self-hosted &middot; offline &middot; no telemetry</p>
+      </div>
+    </div>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <main>
+    <section class="totals" id="totals" aria-live="polite">
+      <article class="card card--accent">
+        <span class="card__label">Per month</span>
+        <span class="card__value" id="monthly">—</span>
+      </article>
+      <article class="card">
+        <span class="card__label">Per year</span>
+        <span class="card__value" id="yearly">—</span>
+      </article>
+      <article class="card">
+        <span class="card__label">Active</span>
+        <span class="card__value" id="count">—</span>
+      </article>
+      <article class="card card--warn" id="next-card">
+        <span class="card__label">Next charge</span>
+        <span class="card__value" id="next">—</span>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <h2>Subscriptions</h2>
+        <button class="ghost" id="toggle-add">+ Add manually</button>
+      </div>
+
+      <form class="add-form" id="add-form" hidden>
+        <input name="name" placeholder="Netflix" required />
+        <input name="amount" type="number" step="0.01" min="0" placeholder="9.99" required />
+        <input name="currency" placeholder="USD" value="USD" maxlength="4" />
+        <select name="cycle">
+          <option value="monthly">monthly</option>
+          <option value="weekly">weekly</option>
+          <option value="quarterly">quarterly</option>
+          <option value="yearly">yearly</option>
+        </select>
+        <input name="next_charge" type="date" />
+        <input name="category" placeholder="streaming" />
+        <button type="submit">Save</button>
+      </form>
+
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Cycle</th>
+            <th class="num">Charge</th>
+            <th class="num">/month</th>
+            <th class="num">Next</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="6" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <h2>Import from bank statement</h2>
+      </div>
+      <p class="hint">
+        Export a CSV from your bank, drop it below, and SubTracker will guess
+        which charges look recurring. Nothing is saved until you confirm.
+      </p>
+      <div class="import">
+        <textarea id="csv" placeholder="date,description,amount&#10;2025-01-03,NETFLIX.COM,-9.99&#10;2025-02-03,NETFLIX.COM,-9.99"></textarea>
+        <div class="import__controls">
+          <input type="file" id="csv-file" accept=".csv,text/csv" />
+          <input id="import-currency" value="USD" maxlength="4" title="currency" />
+          <button id="detect">Detect recurring</button>
+        </div>
+      </div>
+      <div id="candidates" class="candidates"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Runs entirely on <code>localhost</code>. Your data never leaves this machine.</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
